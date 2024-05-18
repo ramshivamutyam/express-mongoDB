@@ -1,3 +1,5 @@
+import bcrypt, { hash } from "bcrypt";
+import User from "../models/user.model.js";
 const register = async (req, res) => {
     try {
         let { username, email, password } = await req.body;
@@ -25,7 +27,6 @@ const register = async (req, res) => {
             }
         }
     } catch (error) {
-        console.log(error.message);
         res.status(500).send({ message: error.message });
     }
 };
@@ -36,7 +37,7 @@ const login = async (req, res) => {
         if (!(email && password)) {
             res.status(403).send({ message: "All fields are required" });
         } else {
-            const user = await User.findOne({ email: email });
+            const user = await User.findOne({ email });
             if (!user) {
                 res.status(403).send({ message: "User does not exist" });
             } else {
@@ -56,4 +57,4 @@ const login = async (req, res) => {
     }
 };
 
-export default { register, login };
+export { register, login };

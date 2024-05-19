@@ -1,5 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import "./Signup.css";
+import axios from "axios";
+
 function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,11 +22,26 @@ function Signup() {
       setRePassword(value);
     }
   }
+  function handleSubmit(event) {
+    event.preventDefault();
+    axios
+      .post("http://localhost:5000/api/user/register", {
+        username:name,
+        email,
+        password,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error.message);
+      });
+  }
   return (
     <div className="signup">
       <div className="signup_container">
         <h1>Create account</h1>
-        <form action="" className="signup_form">
+        <form onSubmit={(e) => {handleSubmit(e)}} className="signup_form">
           <label className="signup_label">Your name</label>
           <input
             name="name"
@@ -60,7 +78,7 @@ function Signup() {
             type="password"
             className="signup_input"
           />
-          <button className="signup_button">create</button>
+          <button type="submit" className="signup_button">create</button>
         </form>
         <hr className="horizontal_line" />
         <button>login here</button>

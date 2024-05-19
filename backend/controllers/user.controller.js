@@ -1,5 +1,7 @@
 import bcrypt, { hash } from "bcrypt";
 import User from "../models/user.model.js";
+import jwt from "jsonwebtoken";
+
 const register = async (req, res) => {
     try {
         let { username, email, password } = await req.body;
@@ -44,8 +46,21 @@ const login = async (req, res) => {
                 bcrypt.compare(password, user.password, (err, result) => {
                     if (err) res.status(500).send({ message: err.message });
                     if (result == true) {
-                        res.status(200).send({
+                        const token = jwt.sign(
+                            { username: user.username },
+                            process.env.JWT_SECRET,
+                            { expiresIn: 60 }
+                        );
+                        //cookies
+                        const options = {
+                            httpOnly: true,
+                            secure: true,
+                        };
+                        res.status(200)
+                        .cookie("token", token)
+                        .send({
                             message: "loged in successfully",
+                            token,
                         });
                     } else
                         res.status(401).send({ message: "Invalid password" });

@@ -1,6 +1,5 @@
 import express from "express";
 import { register, login } from "../controllers/user.controller.js";
-import bodyParser from "body-parser";
 const router = express.Router();
 router.use(express.json());
 // router.use(bodyParser.urlencoded({ extended: true }));
